@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Formulário</h2>
+        <form id="st15Form">
+            <label for="linha">Linha:</label>
+            <select id="linha" name="linha" required>
+                <option value="Linha06">Linha06</option>
+            </select>
+            
+            <label for="tr">TR:</label>
+            <select id="tr" name="tr" required>
+                <option value="">Selecione um TR</option>
+            </select>
+            
+            <label for="st">ST:</label>
+            <select id="st" name="st" required>
+                <option value="">Selecione um ST</option>
+            </select>
+            
+            <label for="nivelGraxa">Nível de Graxa (0-100):</label>
+            <input type="number" id="nivelGraxa" name="nivelGraxa" min="0" max="100" required>
+            
+            <label for="data">Data:</label>
+            <input type="date" id="data" name="data" required>
+            
+            <label for="operacao">Operação:</label>
+            <select id="operacao" name="operacao" required>
+                <option value="Operando">Operando</option>
+                <option value="Não Operando">Não Operando</option>
+            </select>
+            
+            <label for="observacao">Observação:</label>
+            <textarea id="observacao" name="observacao" rows="4" required></textarea>
+            
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+
+    <script>
+        // Configurar Firebase
+        var firebaseConfig = {
+            apiKey: "AIzaSyDV-fD0ZdVHYVVfNyzFigdwYYc1M4yPOGU",
+            authDomain: "lub-porto.firebaseapp.com",
+            databaseURL: "https://lub-porto-default-rtdb.firebaseio.com",
+            projectId: "lub-porto",
+            storageBucket: "lub-porto.firebasestorage.app",
+            messagingSenderId: "360523245715",
+            appId: "1:360523245715:web:0a41e8977ea91e32a78566",
+            measurementId: "G-5W7R92NLD4"
+        };
+        firebase.initializeApp(firebaseConfig);
+
+        var trSelect = document.getElementById('tr');
+        var stSelect = document.getElementById('st');
+
+        // Preencher opções de TRs com base na Linha06
+        firebase.database().ref('Linha06').once('value').then(function(snapshot) {
+            snapshot.forEach(function(childSnapshot) {
+                var option = document.createElement('option');
+                option.value = childSnapshot.key;
+                option.text = childSnapshot.key;
+                trSelect.add(option);
+            });
+        });
+
+        // Preencher opções de STs com base no TR selecionado
+        trSelect.addEventListener('change', function() {
+            stSelect.innerHTML = '<option value="">Selecione um ST</option>';
+            var selectedTR = trSelect.value;
+            if (selectedTR) {
+                firebase.database().ref('Linha06/' + selectedTR).once('value').then(function(snapshot) {
+                    snapshot.forEach(function(childSnapshot) {
+                        var option = document.createElement('option');
+                        option.value = childSnapshot.key;
+                        option.text = childSnapshot.key;
+                        stSelect.add(option);
+                    });
+                });
+            }
+        });
+
+        document.getElementById('st15Form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            var linha = 'Linha06';
+            var tr = document.getElementById('tr').value;
+            var st = document.getElementById('st').value;
+            var nivelGraxa = document.getElementById('nivelGraxa').value;
+            var data = document.getElementById('data').value;
+            var operacao = document.getElementById('operacao').value;
+            var observacao = document.getElementById('observacao').value;
+
+            var updateData = {
+                data: data,
+                nivelGraxa: nivelGraxa,
+                operacao: operacao,
+                observacao: observacao
+            };
+
+            firebase.database().ref('Linha06/' + tr + '/' + st).update(updateData).then(function() {
+                alert('Formulário atualizado com sucesso!');
+                document.getElementById('st15Form').reset();
+            }).catch(function(error) {
+                alert('Erro ao atualizar formulário: ' + error.message);
+            });
+        });
+    </script>
+</body>
+</html>

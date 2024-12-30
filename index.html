@@ -105,7 +105,7 @@
 
         // Preencher opções de STs com base no TR selecionado
         trSelect.addEventListener('change', function() {
-            stSelect.innerHTML = '<option value="">Selecione um ST</option>';
+            stSelect.innerHTML = '<option value="">Selecione uma tag</option>';
             var selectedTR = trSelect.value;
             if (selectedTR) {
                 firebase.database().ref('Linha06/' + selectedTR).once('value').then(function(snapshot) {

@@ -106,7 +106,6 @@
                 option.text = childSnapshot.key;
                 trSelect.add(option);
             });
-        });
         
         firebase.database().ref('Linha06').once('value').then(function(snapshot) {
             snapshot.forEach(function(childSnapshot) {
@@ -118,6 +117,38 @@
         });
 
         // Preencher opções de STs e dados do formulário com base no TR selecionado
+
+              trSelect.addEventListener('change', function() {
+            stSelect.innerHTML = '<option value="">Selecione uma Tag</option>';
+            var selectedTR = trSelect.value;
+            if (selectedTR) {
+                firebase.database().ref('Linha05/' + selectedTR).once('value').then(function(snapshot) {
+                    snapshot.forEach(function(childSnapshot) {
+                        var option = document.createElement('option');
+                        option.value = childSnapshot.key;
+                        option.text = childSnapshot.key;
+                        stSelect.add(option);
+                    });
+                });
+            }
+        });
+
+               stSelect.addEventListener('change', function() {
+            var selectedTR = trSelect.value;
+            var selectedST = stSelect.value;
+            if (selectedST) {
+                firebase.database().ref('Linha05/' + selectedTR + '/' + selectedST).once('value').then(function(snapshot) {
+                    var data = snapshot.val();
+                    if (data) {
+                        document.getElementById('data').value = data.data || '';
+                        document.getElementById('nivelGraxa').value = data.nivelGraxa || '';
+                        document.getElementById('operacao').value = data.operacao || '';
+                        document.getElementById('observacao').value = data.observacao || '';
+                    }
+                });
+            }
+        });
+             
         trSelect.addEventListener('change', function() {
             stSelect.innerHTML = '<option value="">Selecione uma Tag</option>';
             var selectedTR = trSelect.value;
@@ -152,6 +183,30 @@
         document.getElementById('st15Form').addEventListener('submit', function(event) {
             event.preventDefault();
             
+             var nome = document.getElementById('nome').value;
+            var linha = 'Linha05';
+            var tr = document.getElementById('tr').value;
+            var st = document.getElementById('st').value;
+            var nivelGraxa = document.getElementById('nivelGraxa').value;
+            var data = document.getElementById('data').value;
+            var operacao = document.getElementById('operacao').value;
+            var observacao = document.getElementById('observacao').value;
+
+            var updateData = {
+                data: data,
+                nivelGraxa: nivelGraxa,
+                operacao: operacao,
+                observacao: observacao,
+                nome: nome
+            };
+
+            firebase.database().ref('Linha05/' + tr + '/' + st).update(updateData).then(function() {
+                alert('Formulário atualizado com sucesso!');
+                document.getElementById('st15Form').reset();
+            }).catch(function(error) {
+                alert('Erro ao atualizar formulário: ' + error.message);
+            });
+        });
             var nome = document.getElementById('nome').value;
             var linha = 'Linha06';
             var tr = document.getElementById('tr').value;

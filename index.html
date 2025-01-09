@@ -3,13 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulário</title>
+    <title>Formulário para Firebase</title>
 </head>
 <body>
     <form id="firebaseForm">
-        <label for="nome">Nome:</label>
-        <input type="text" id="nome" name="nome"><br>
-
         <label for="linha">Linha:</label>
         <select id="linha" name="linha">
             <option value="Linha05">Linha05</option>
@@ -51,14 +48,13 @@
     <script>
         // Sua configuração do Firebase
         const firebaseConfig = {
-             apiKey: "AIzaSyDV-fD0ZdVHYVVfNyzFigdwYYc1M4yPOGU",
-  authDomain: "lub-porto.firebaseapp.com",
-  databaseURL: "https://lub-porto-default-rtdb.firebaseio.com",
-  projectId: "lub-porto",
-  storageBucket: "lub-porto.firebasestorage.app",
-  messagingSenderId: "360523245715",
-  appId: "1:360523245715:web:0a41e8977ea91e32a78566",
-  measurementId: "G-5W7R92NLD4"
+            apiKey: "SUA-API-KEY",
+            authDomain: "SEU-PROJETO.firebaseapp.com",
+            databaseURL: "https://SEU-PROJETO.firebaseio.com",
+            projectId: "SEU-PROJETO",
+            storageBucket: "SEU-PROJETO.appspot.com",
+            messagingSenderId: "SEU-SENDER-ID",
+            appId: "SEU-APP-ID"
         };
 
         // Inicialize o Firebase
@@ -117,7 +113,6 @@
         document.getElementById('firebaseForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const nome = document.getElementById('nome').value;
             const linha = document.getElementById('linha').value;
             const tr = document.getElementById('tr').value;
             const st = document.getElementById('st').value;
@@ -127,7 +122,6 @@
             const dataRealizada = document.getElementById('dataRealizada').value;
 
             database.ref(`${linha}/${tr}/${st}`).set({
-                nome: nome,
                 data: dataRealizada,
                 nivelGraxa: nivelGraxa,
                 observacao: observacao,

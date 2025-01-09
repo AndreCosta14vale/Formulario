@@ -47,6 +47,7 @@
 
             <label for="linha">Linha:</label>
             <select id="linha" name="linha" required>
+                <option value="Linha05">Linha05</option>
                 <option value="Linha06">Linha06</option>
             </select>
             
@@ -93,25 +94,33 @@ measurementId: "G-5W7R92NLD4"
         };
         firebase.initializeApp(firebaseConfig);
 
+        var linhaSelect = document.getElementById('linha');
         var trSelect = document.getElementById('tr');
         var stSelect = document.getElementById('st');
 
-        // Preencher opções de TRs com base na Linha06
-        firebase.database().ref('Linha06').once('value').then(function(snapshot) {
-            snapshot.forEach(function(childSnapshot) {
-                var option = document.createElement('option');
-                option.value = childSnapshot.key;
-                option.text = childSnapshot.key;
-                trSelect.add(option);
-            });
+        // Preencher opções de TRs com base na Linha selecionada
+        linhaSelect.addEventListener('change', function() {
+            trSelect.innerHTML = '<option value="">Selecione um TR</option>';
+            var selectedLinha = linhaSelect.value;
+            if (selectedLinha) {
+                firebase.database().ref(selectedLinha).once('value').then(function(snapshot) {
+                    snapshot.forEach(function(childSnapshot) {
+                        var option = document.createElement('option');
+                        option.value = childSnapshot.key;
+                        option.text = childSnapshot.key;
+                        trSelect.add(option);
+                    });
+                });
+            }
         });
 
-        // Preencher opções de STs e dados do formulário com base no TR selecionado
+        // Preencher opções de STs com base no TR selecionado
         trSelect.addEventListener('change', function() {
             stSelect.innerHTML = '<option value="">Selecione um ST</option>';
+            var selectedLinha = linhaSelect.value;
             var selectedTR = trSelect.value;
             if (selectedTR) {
-                firebase.database().ref('Linha06/' + selectedTR).once('value').then(function(snapshot) {
+                firebase.database().ref(selectedLinha + '/' + selectedTR).once('value').then(function(snapshot) {
                     snapshot.forEach(function(childSnapshot) {
                         var option = document.createElement('option');
                         option.value = childSnapshot.key;
@@ -122,11 +131,13 @@ measurementId: "G-5W7R92NLD4"
             }
         });
 
+        // Preencher dados do formulário com base no ST selecionado
         stSelect.addEventListener('change', function() {
+            var selectedLinha = linhaSelect.value;
             var selectedTR = trSelect.value;
             var selectedST = stSelect.value;
             if (selectedST) {
-                firebase.database().ref('Linha06/' + selectedTR + '/' + selectedST).once('value').then(function(snapshot) {
+                firebase.database().ref(selectedLinha + '/' + selectedTR + '/' + selectedST).once('value').then(function(snapshot) {
                     var data = snapshot.val();
                     if (data) {
                         document.getElementById('data').value = data.data || '';
@@ -142,9 +153,9 @@ measurementId: "G-5W7R92NLD4"
             event.preventDefault();
             
             var nome = document.getElementById('nome').value;
-            var linha = 'Linha06';
-            var tr = document.getElementById('tr').value;
-            var st = document.getElementById('st').value;
+            var linha = linhaSelect.value;
+            var tr = trSelect.value;
+            var st = stSelect.value;
             var nivelGraxa = document.getElementById('nivelGraxa').value;
             var data = document.getElementById('data').value;
             var operacao = document.getElementById('operacao').value;
@@ -158,7 +169,7 @@ measurementId: "G-5W7R92NLD4"
                 nome: nome
             };
 
-            firebase.database().ref('Linha06/' + tr + '/' + st).update(updateData).then(function() {
+            firebase.database().ref(linha + '/' + tr + '/' + st).update(updateData).then(function() {
                 alert('Formulário atualizado com sucesso!');
                 document.getElementById('st15Form').reset();
             }).catch(function(error) {

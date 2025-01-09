@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulário ST15</title>
+    <title>Formulário</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
@@ -40,7 +40,7 @@
 </head>
 <body>
     <div class="container">
-        <h2>Formulário ST15</h2>
+        <h2>Formulário</h2>
         <form id="st15Form">
             <label for="nome">Nome ou E-mail:</label>
             <input type="text" id="nome" name="nome" required>
@@ -50,14 +50,14 @@
                 <option value="Linha06">Linha06</option>
             </select>
             
-            <label for="tr">TR:</label>
+            <label for="tr">Rota:</label>
             <select id="tr" name="tr" required>
-                <option value="">Selecione um TR</option>
+                <option value="">Selecione uma rota</option>
             </select>
             
-            <label for="st">ST:</label>
+            <label for="st">Tag:</label>
             <select id="st" name="st" required>
-                <option value="">Selecione um ST</option>
+                <option value="">Selecione uma Tag</option>
             </select>
             
             <label for="nivelGraxa">Nível de Graxa (0-100):</label>
@@ -82,13 +82,14 @@
     <script>
         // Configurar Firebase
         var firebaseConfig = {
-            apiKey: "SUA_API_KEY",
-            authDomain: "SEU_AUTH_DOMAIN",
-            databaseURL: "https://lub-porto-default-rtdb.firebaseio.com/",
-            projectId: "SEU_PROJECT_ID",
-            storageBucket: "SEU_STORAGE_BUCKET",
-            messagingSenderId: "SEU_MESSAGING_SENDER_ID",
-            appId: "SEU_APP_ID"
+           apiKey: "AIzaSyDV-fD0ZdVHYVVfNyzFigdwYYc1M4yPOGU",
+  authDomain: "lub-porto.firebaseapp.com",
+  databaseURL: "https://lub-porto-default-rtdb.firebaseio.com",
+  projectId: "lub-porto",
+  storageBucket: "lub-porto.firebasestorage.app",
+  messagingSenderId: "360523245715",
+  appId: "1:360523245715:web:0a41e8977ea91e32a78566",
+  measurementId: "G-5W7R92NLD4"
         };
         firebase.initializeApp(firebaseConfig);
 

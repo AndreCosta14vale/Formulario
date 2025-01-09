@@ -3,87 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulário</title>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        .container {
-            max-width: 600px;
-            margin: auto;
-            background: #fff;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        input, select, textarea {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            box-sizing: border-box;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    <title>Formulário para Firebase</title>
 </head>
 <body>
-    <div class="container">
-        <h2>Formulário</h2>
-        <form id="st15Form">
-            <label for="nome">Nome ou E-mail:</label>
-            <input type="text" id="nome" name="nome" required>
+    <form id="firebaseForm">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome"><br>
 
-            <label for="linha">Linha:</label>
-            <select id="linha" name="linha" required>
-                <option value="Linha06">Linha05</option>
-                 <option value="Linha06">Linha06</option>
-            </select>
-            
-            <label for="tr">Rota:</label>
-            <select id="tr" name="tr" required>
-                <option value="">Selecione uma rota</option>
-            </select>
-            
-            <label for="st">Tag:</label>
-            <select id="st" name="st" required>
-                <option value="">Selecione uma Tag</option>
-            </select>
-            
-            <label for="nivelGraxa">Nível de Graxa (0-100):</label>
-            <input type="number" id="nivelGraxa" name="nivelGraxa" min="0" max="100" required>
-            
-            <label for="data">Data:</label>
-            <input type="date" id="data" name="data" required>
-            
-            <label for="operacao">Operação:</label>
-            <select id="operacao" name="operacao" required>
-                <option value="Operando">Operando</option>
-                <option value="Não Operando">Não Operando</option>
-            </select>
-            
-            <label for="observacao">Observação:</label>
-            <textarea id="observacao" name="observacao" rows="4" required></textarea>
-            
-            <button type="submit">Enviar</button>
-        </form>
-    </div>
+        <label for="linha">Linha:</label>
+        <select id="linha" name="linha">
+            <option value="Linha05">Linha05</option>
+            <option value="Linha06">Linha06</option>
+        </select><br>
+
+        <label for="tr">TR:</label>
+        <select id="tr" name="tr">
+            <!-- Opções serão adicionadas dinamicamente -->
+        </select><br>
+
+        <label for="st">ST:</label>
+        <select id="st" name="st">
+            <!-- Opções serão adicionadas dinamicamente -->
+        </select><br>
+
+        <label for="nivelGraxa">Nível de Graxa:</label>
+        <input type="number" id="nivelGraxa" name="nivelGraxa"><br>
+
+        <label for="status">Status:</label>
+        <select id="status" name="status">
+            <option value="Operando">Operando</option>
+            <option value="Nao operando">Não operando</option>
+        </select><br>
+
+        <label for="observacao">Observação:</label>
+        <textarea id="observacao" name="observacao"></textarea><br>
+
+        <label for="dataRealizada">Data Realizada:</label>
+        <input type="date" id="dataRealizada" name="dataRealizada"><br>
+
+        <button type="submit">Enviar</button>
+    </form>
+
+    <!-- Adicione a biblioteca do Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-database.js"></script>
 
     <script>
-        // Configurar Firebase
-        var firebaseConfig = {
-           apiKey: "AIzaSyDV-fD0ZdVHYVVfNyzFigdwYYc1M4yPOGU",
+        // Sua configuração do Firebase
+        const firebaseConfig = {
+             apiKey: "AIzaSyDV-fD0ZdVHYVVfNyzFigdwYYc1M4yPOGU",
   authDomain: "lub-porto.firebaseapp.com",
   databaseURL: "https://lub-porto-default-rtdb.firebaseio.com",
   projectId: "lub-porto",
@@ -92,144 +60,81 @@
   appId: "1:360523245715:web:0a41e8977ea91e32a78566",
   measurementId: "G-5W7R92NLD4"
         };
+
+        // Inicialize o Firebase
         firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
 
-        var trSelect = document.getElementById('tr');
-        var stSelect = document.getElementById('st');
+        // Função para preencher os campos de seleção com os dados do Firebase
+        function preencherSelecoes() {
+            const linhaSelect = document.getElementById('linha');
+            const trSelect = document.getElementById('tr');
+            const stSelect = document.getElementById('st');
 
-        // Preencher opções de TRs com base na Linha06
-
-         firebase.database().ref('Linha05').once('value').then(function(snapshot) {
-            snapshot.forEach(function(childSnapshot) {
-                var option = document.createElement('option');
-                option.value = childSnapshot.key;
-                option.text = childSnapshot.key;
-                trSelect.add(option);
-            });
-        
-        firebase.database().ref('Linha06').once('value').then(function(snapshot) {
-            snapshot.forEach(function(childSnapshot) {
-                var option = document.createElement('option');
-                option.value = childSnapshot.key;
-                option.text = childSnapshot.key;
-                trSelect.add(option);
-            });
-        });
-
-        // Preencher opções de STs e dados do formulário com base no TR selecionado
-
-              trSelect.addEventListener('change', function() {
-            stSelect.innerHTML = '<option value="">Selecione uma Tag</option>';
-            var selectedTR = trSelect.value;
-            if (selectedTR) {
-                firebase.database().ref('Linha05/' + selectedTR).once('value').then(function(snapshot) {
+            // Ler dados das linhas disponíveis
+            linhaSelect.addEventListener('change', function() {
+                const linhaValue = linhaSelect.value;
+                trSelect.innerHTML = '';
+                database.ref(`${linhaValue}`).once('value', function(snapshot) {
                     snapshot.forEach(function(childSnapshot) {
-                        var option = document.createElement('option');
-                        option.value = childSnapshot.key;
-                        option.text = childSnapshot.key;
-                        stSelect.add(option);
+                        const trKey = childSnapshot.key;
+                        const option = document.createElement('option');
+                        option.value = trKey;
+                        option.text = trKey;
+                        trSelect.appendChild(option);
                     });
-                });
-            }
-        });
 
-               stSelect.addEventListener('change', function() {
-            var selectedTR = trSelect.value;
-            var selectedST = stSelect.value;
-            if (selectedST) {
-                firebase.database().ref('Linha05/' + selectedTR + '/' + selectedST).once('value').then(function(snapshot) {
-                    var data = snapshot.val();
-                    if (data) {
-                        document.getElementById('data').value = data.data || '';
-                        document.getElementById('nivelGraxa').value = data.nivelGraxa || '';
-                        document.getElementById('operacao').value = data.operacao || '';
-                        document.getElementById('observacao').value = data.observacao || '';
+                    // Ler dados dos ST quando um TR é selecionado
+                    trSelect.addEventListener('change', function() {
+                        const trValue = trSelect.value;
+                        stSelect.innerHTML = '';
+                        database.ref(`${linhaValue}/${trValue}`).once('value', function(snapshot) {
+                            snapshot.forEach(function(childSnapshot) {
+                                const stKey = childSnapshot.key;
+                                const option = document.createElement('option');
+                                option.value = stKey;
+                                option.text = stKey;
+                                stSelect.appendChild(option);
+                            });
+                        });
+                    });
+
+                    // Disparar evento de alteração no TR ao carregar a página
+                    if (trSelect.options.length > 0) {
+                        trSelect.dispatchEvent(new Event('change'));
                     }
                 });
-            }
-        });
-             
-        trSelect.addEventListener('change', function() {
-            stSelect.innerHTML = '<option value="">Selecione uma Tag</option>';
-            var selectedTR = trSelect.value;
-            if (selectedTR) {
-                firebase.database().ref('Linha06/' + selectedTR).once('value').then(function(snapshot) {
-                    snapshot.forEach(function(childSnapshot) {
-                        var option = document.createElement('option');
-                        option.value = childSnapshot.key;
-                        option.text = childSnapshot.key;
-                        stSelect.add(option);
-                    });
-                });
-            }
-        });
-
-        stSelect.addEventListener('change', function() {
-            var selectedTR = trSelect.value;
-            var selectedST = stSelect.value;
-            if (selectedST) {
-                firebase.database().ref('Linha06/' + selectedTR + '/' + selectedST).once('value').then(function(snapshot) {
-                    var data = snapshot.val();
-                    if (data) {
-                        document.getElementById('data').value = data.data || '';
-                        document.getElementById('nivelGraxa').value = data.nivelGraxa || '';
-                        document.getElementById('operacao').value = data.operacao || '';
-                        document.getElementById('observacao').value = data.observacao || '';
-                    }
-                });
-            }
-        });
-
-        document.getElementById('st15Form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-             var nome = document.getElementById('nome').value;
-            var linha = 'Linha05';
-            var tr = document.getElementById('tr').value;
-            var st = document.getElementById('st').value;
-            var nivelGraxa = document.getElementById('nivelGraxa').value;
-            var data = document.getElementById('data').value;
-            var operacao = document.getElementById('operacao').value;
-            var observacao = document.getElementById('observacao').value;
-
-            var updateData = {
-                data: data,
-                nivelGraxa: nivelGraxa,
-                operacao: operacao,
-                observacao: observacao,
-                nome: nome
-            };
-
-            firebase.database().ref('Linha05/' + tr + '/' + st).update(updateData).then(function() {
-                alert('Formulário atualizado com sucesso!');
-                document.getElementById('st15Form').reset();
-            }).catch(function(error) {
-                alert('Erro ao atualizar formulário: ' + error.message);
             });
-        });
-            var nome = document.getElementById('nome').value;
-            var linha = 'Linha06';
-            var tr = document.getElementById('tr').value;
-            var st = document.getElementById('st').value;
-            var nivelGraxa = document.getElementById('nivelGraxa').value;
-            var data = document.getElementById('data').value;
-            var operacao = document.getElementById('operacao').value;
-            var observacao = document.getElementById('observacao').value;
 
-            var updateData = {
-                data: data,
+            // Disparar a leitura dos dados ao carregar a página
+            linhaSelect.dispatchEvent(new Event('change'));
+        }
+
+        // Chamar a função para preencher os campos de seleção
+        preencherSelecoes();
+
+        // Função para enviar dados ao Firebase
+        document.getElementById('firebaseForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const nome = document.getElementById('nome').value;
+            const linha = document.getElementById('linha').value;
+            const tr = document.getElementById('tr').value;
+            const st = document.getElementById('st').value;
+            const nivelGraxa = document.getElementById('nivelGraxa').value;
+            const status = document.getElementById('status').value;
+            const observacao = document.getElementById('observacao').value;
+            const dataRealizada = document.getElementById('dataRealizada').value;
+
+            database.ref(`${linha}/${tr}/${st}`).set({
+                nome: nome,
+                data: dataRealizada,
                 nivelGraxa: nivelGraxa,
-                operacao: operacao,
                 observacao: observacao,
-                nome: nome
-            };
-
-            firebase.database().ref('Linha06/' + tr + '/' + st).update(updateData).then(function() {
-                alert('Formulário atualizado com sucesso!');
-                document.getElementById('st15Form').reset();
-            }).catch(function(error) {
-                alert('Erro ao atualizar formulário: ' + error.message);
+                operacao: status
             });
+
+            alert('Dados enviados com sucesso!');
         });
     </script>
 </body>

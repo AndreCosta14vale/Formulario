@@ -98,6 +98,16 @@
         var stSelect = document.getElementById('st');
 
         // Preencher opções de TRs com base na Linha06
+
+         firebase.database().ref('Linha05').once('value').then(function(snapshot) {
+            snapshot.forEach(function(childSnapshot) {
+                var option = document.createElement('option');
+                option.value = childSnapshot.key;
+                option.text = childSnapshot.key;
+                trSelect.add(option);
+            });
+        });
+        
         firebase.database().ref('Linha06').once('value').then(function(snapshot) {
             snapshot.forEach(function(childSnapshot) {
                 var option = document.createElement('option');

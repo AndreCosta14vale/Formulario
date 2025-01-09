@@ -9,7 +9,6 @@
     <form id="firebaseForm">
         <label for="linha">Linha:</label>
         <select id="linha" name="linha">
-            <option value="Linha05">Linha05</option>
             <option value="Linha06">Linha06</option>
         </select><br>
 
@@ -67,43 +66,36 @@
             const trSelect = document.getElementById('tr');
             const stSelect = document.getElementById('st');
 
-            // Ler dados das linhas disponíveis
-            linhaSelect.addEventListener('change', function() {
-                const linhaValue = linhaSelect.value;
-                trSelect.innerHTML = '';
-                database.ref(`${linhaValue}`).once('value', function(snapshot) {
-                    snapshot.forEach(function(childSnapshot) {
-                        const trKey = childSnapshot.key;
-                        const option = document.createElement('option');
-                        option.value = trKey;
-                        option.text = trKey;
-                        trSelect.appendChild(option);
-                    });
+            // Ler dados dos TR disponíveis
+            database.ref('Linha06').once('value', function(snapshot) {
+                snapshot.forEach(function(childSnapshot) {
+                    const trKey = childSnapshot.key;
+                    const option = document.createElement('option');
+                    option.value = trKey;
+                    option.text = trKey;
+                    trSelect.appendChild(option);
+                });
 
-                    // Ler dados dos ST quando um TR é selecionado
-                    trSelect.addEventListener('change', function() {
-                        const trValue = trSelect.value;
-                        stSelect.innerHTML = '';
-                        database.ref(`${linhaValue}/${trValue}`).once('value', function(snapshot) {
-                            snapshot.forEach(function(childSnapshot) {
-                                const stKey = childSnapshot.key;
-                                const option = document.createElement('option');
-                                option.value = stKey;
-                                option.text = stKey;
-                                stSelect.appendChild(option);
-                            });
+                // Adicionar evento para ler dados dos ST quando um TR é selecionado
+                trSelect.addEventListener('change', function() {
+                    const trValue = trSelect.value;
+                    stSelect.innerHTML = '';
+                    database.ref(`Linha06/${trValue}`).once('value', function(snapshot) {
+                        snapshot.forEach(function(childSnapshot) {
+                            const stKey = childSnapshot.key;
+                            const option = document.createElement('option');
+                            option.value = stKey;
+                            option.text = stKey;
+                            stSelect.appendChild(option);
                         });
                     });
-
-                    // Disparar evento de alteração no TR ao carregar a página
-                    if (trSelect.options.length > 0) {
-                        trSelect.dispatchEvent(new Event('change'));
-                    }
                 });
-            });
 
-            // Disparar a leitura dos dados ao carregar a página
-            linhaSelect.dispatchEvent(new Event('change'));
+                // Disparar evento de alteração no TR ao carregar a página
+                if (trSelect.options.length > 0) {
+                    trSelect.dispatchEvent(new Event('change'));
+                }
+            });
         }
 
         // Chamar a função para preencher os campos de seleção
@@ -121,7 +113,7 @@
             const observacao = document.getElementById('observacao').value;
             const dataRealizada = document.getElementById('dataRealizada').value;
 
-            database.ref(`${linha}/${tr}/${st}`).set({
+            database.ref(`Linha06/${tr}/${st}`).set({
                 data: dataRealizada,
                 nivelGraxa: nivelGraxa,
                 observacao: observacao,

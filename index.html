@@ -52,14 +52,14 @@
                 <option value="Linha06">Linha06</option>
             </select>
             
-            <label for="tr">TR:</label>
+            <label for="tr">Rota:</label>
             <select id="tr" name="tr" required>
-                <option value="">Selecione um TR</option>
+                <option value="">Selecione uma rota</option>
             </select>
             
-            <label for="st">ST:</label>
+            <label for="st">Centralizada:</label>
             <select id="st" name="st" required>
-                <option value="">Selecione um ST</option>
+                <option value="">Selecione uma tag</option>
             </select>
             
             <label for="nivelGraxa">Nível de Graxa (0-100):</label>
@@ -101,7 +101,7 @@ measurementId: "G-5W7R92NLD4"
 
         // Preencher opções de TRs com base na Linha selecionada
         linhaSelect.addEventListener('change', function() {
-            trSelect.innerHTML = '<option value="">Selecione um TR</option>';
+            trSelect.innerHTML = '<option value="">Selecione uma rota</option>';
             var selectedLinha = linhaSelect.value;
             if (selectedLinha) {
                 firebase.database().ref(selectedLinha).once('value').then(function(snapshot) {
@@ -117,7 +117,7 @@ measurementId: "G-5W7R92NLD4"
 
         // Preencher opções de STs com base no TR selecionado
         trSelect.addEventListener('change', function() {
-            stSelect.innerHTML = '<option value="">Selecione um ST</option>';
+            stSelect.innerHTML = '<option value="">Selecione uma tag</option>';
             var selectedLinha = linhaSelect.value;
             var selectedTR = trSelect.value;
             if (selectedTR) {
